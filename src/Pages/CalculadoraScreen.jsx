@@ -1,7 +1,8 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { BtnCalculadora } from "../Components/BtnCalculadora";
 import { DisplayCalculadora } from "../Components/DisplayCalculadora";
 import { cambioBtn } from "../utils/cambioBtn";
+import { operadores } from "../utils/operadores";
 
 const estadoInicial = [
   "AC",
@@ -30,30 +31,38 @@ const excluir = ["AC", "+/-", "%", "/", "*", "-", "+", "=", "C"];
 export const CalculadoraScreen = () => {
   const [btnValue, setBtnValue] = useState(estadoInicial);
   const [numero, setNumero] = useState("0");
-  const displayRef = useRef(null);
+  let operadorActivo = false;
 
   const handleChangeDisplay = (value) => {
     let concatenar = "";
     if (!excluir.includes(value)) {
       setBtnValue(cambioBtn(estadoInicial, "C", 0));
-
       if (!numero.includes(".")) {
         if (value === ".") {
           concatenar = numero + value;
         } else {
-          concatenar = (numero === "0" ? "" : numero) + value;
+          console.log(operadorActivo);
+          if (!operadorActivo) {
+            concatenar = (numero === "0" ? "" : numero) + value;
+          } else {
+            concatenar = numero;
+            operadorActivo = false;
+          }
+          console.log(concatenar);
         }
-        setNumero(concatenar);
       } else {
         concatenar = numero + (value === "." ? "" : value);
       }
       setNumero(concatenar);
     } else {
+      operadorActivo = true;
+      const resultado = operadores(numero, value);
+      setNumero(resultado.toString());
     }
   };
   return (
     <div className="container">
-      <DisplayCalculadora value={numero} referencia={displayRef} />
+      <DisplayCalculadora value={numero} />
       <div className="container-btn">
         {btnValue.map((btn, indice) => {
           return (

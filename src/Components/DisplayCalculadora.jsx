@@ -1,9 +1,9 @@
 import React from "react";
 
-export const DisplayCalculadora = ({ value, referencia }) => {
+export const DisplayCalculadora = ({ value }) => {
   return (
     <div className="display">
-      <p ref={referencia}>{value}</p>
+      <p>{value}</p>
     </div>
   );
 };
